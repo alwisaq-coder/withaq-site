@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WithAQ | Sovereign Revenue Intelligence</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { obsidian: '#020202', electric: '#12F0DE', violet: '#8A2BE2', gold: '#FFD700', pink: '#FFB6C1' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Syne', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* BASE RESET */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { background-color: #020202; color: #ffffff; overflow-x: hidden; font-family: 'Inter', sans-serif; line-height: 1.6; }
+
+        /* NOISE OVERLAY FOR DEPTH */
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.03; z-index: 9998; pointer-events: none;
+        }
+
+        /* SCANNER REVEAL */
+        #scanner {
+            position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #12F0DE, #8A2BE2, transparent);
+            z-index: 9999; animation: scan 3.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+        @keyframes scan { from { top: 0%; opacity: 1; } to { top: 100%; opacity: 0; } }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #12F0DE, #8A2BE2, #FFB6C1);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: flow 8s ease infinite;
+        }
+        @keyframes flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* GLASS MORPHISM */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.012);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-panel:hover { border-color: rgba(18, 240, 222, 0.3); background: rgba(255, 255, 255, 0.02); }
+
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .content-layer { position: relative; z-index: 10; pointer-events: none; }
+        .interactive { pointer-events: auto; }
+
+        /* CURSOR */
+        .cursor-dot { position: fixed; width: 4px; height: 4px; background: #12F0DE; border-radius: 50%; z-index: 10000; pointer-events: none; transform: translate(-50%, -50%); box-shadow: 0 0 10px #12F0DE; }
+        .cursor-ring { position: fixed; width: 35px; height: 35px; border: 1px solid rgba(18, 240, 222, 0.2); border-radius: 50%; z-index: 10000; pointer-events: none; transition: transform 0.2s ease-out; transform: translate(-50%, -50%); }
+
+        /* MINIMALIST TYPOGRAPHY */
+        .title-sm { font-size: clamp(2rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.05em; font-weight: 800; text-transform: uppercase; }
+        .sub-header { font-size: 9px; tracking: 0.8em; font-weight: 900; text-transform: uppercase; opacity: 0.4; }
+
+        .fade-in { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1); }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* TICKER */
+        .ticker-wrap { 
+            overflow: hidden; width: 100%; background: rgba(255,255,255,0.01);
+            border-top: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03); 
+            padding: 20px 0; position: relative; z-index: 20;
+        }
+        .ticker { display: flex; white-space: nowrap; animation: ticker 55s linear infinite; }
+        .ticker span { 
+            display: inline-block; font-size: 8px; font-weight: 900; letter-spacing: 0.6em; 
+            text-transform: uppercase; padding: 0 60px; color: rgba(255,255,255,0.25);
+        }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        @media (max-width: 768px) { * { cursor: auto; } .cursor-dot, .cursor-ring { display: none; } }
+    </style>
+</head>
+
+<body>
+    <div id="scanner"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <canvas id="three-canvas"></canvas>
+
+    <nav class="fixed top-0 left-0 w-full z-50 content-layer p-8">
+        <div class="max-w-[1700px] mx-auto flex justify-between items-center">
+            <div class="font-display text-xl tracking-[-0.1em] font-800 uppercase">With<span class="text-gradient">AQ</span></div>
+            <div class="flex items-center gap-12">
+                <span class="hidden lg:block text-[7px] tracking-[0.8em] text-white/10 font-black uppercase">Unit 04 • Revenue Logic</span>
+                <a href="mailto:connect@withaq.info" class="interactive px-8 py-3 rounded-full border border-white/5 text-[8px] tracking-[0.4em] font-black hover:bg-white hover:text-black transition-all">CONNECT</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="content-layer min-h-screen flex flex-col items-center justify-center text-center px-6">
+        <div class="max-w-4xl">
+            <p class="fade-in sub-header mb-8 text-electric">Intelligence Deployment</p>
+            <h1 class="title-sm fade-in mb-16">
+                Engineered for <span class="text-gradient">Speed</span>.<br>
+                Validated in the <span class="text-gradient">Market</span>.
+            </h1>
+            <div class="fade-in interactive">
+                <a href="#intel" class="group relative px-16 py-6 rounded-full border border-white/5 transition-all overflow-hidden inline-block">
+                    <span class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></span>
+                    <span class="relative text-[9px] tracking-[0.6em] font-black uppercase group-hover:text-black transition-colors">Enter System</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="content-layer ticker-wrap interactive">
+        <div class="ticker">
+            <span>+34% Efficiency</span><span>•</span><span>Dubai SME Growth Unit</span><span>•</span><span>Proprietary Lead Qualification</span><span>•</span><span>High-Frequency ROI</span><span>•</span><span>Sovereign Assets</span><span>•</span>
+            <span>+34% Efficiency</span><span>•</span><span>Dubai SME Growth Unit</span><span>•</span><span>Proprietary Lead Qualification</span><span>•</span><span>High-Frequency ROI</span><span>•</span><span>Sovereign Assets</span>
+        </div>
+    </div>
+
+    <section id="intel" class="content-layer py-60 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex flex-col mb-24 border-b border-white/5 pb-16">
+                <div class="fade-in mb-8">
+                    <p class="sub-header mb-4">Framework</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                        The <span class="text-gradient">Core</span> Intelligence
+                    </h2>
+                </div>
+                <div class="fade-in max-w-xl">
+                    <p class="text-white/30 text-sm md:text-base font-light leading-relaxed">
+                        Algorithmic execution frameworks designed to turn audience attention into scalable revenue pillars with absolute certainty.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-12 rounded-[2.5rem] fade-in interactive">
+                    <p class="text-electric/40 font-black text-[8px] tracking-widest mb-6">01 / DISCOVERY</p>
+                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Path Analysis</h3>
+                    <p class="text-white/20 font-light text-xs leading-relaxed">Mapping high-intent movements via site intelligence.</p>
+                </div>
+                <div class="glass-panel p-12 rounded-[2.5rem] fade-in interactive">
+                    <p class="text-violet/40 font-black text-[8px] tracking-widest mb-6">02 / LAUNCH</p>
+                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Kinetic Execution</h3>
+                    <p class="text-white/20 font-light text-xs leading-relaxed">High-frequency creative deployment across DOOH infrastructures.</p>
+                </div>
+                <div class="glass-panel p-12 rounded-[2.5rem] fade-in interactive">
+                    <p class="text-gold/40 font-black text-[8px] tracking-widest mb-6">03 / SCALE</p>
+                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Equity Growth</h3>
+                    <p class="text-white/20 font-light text-xs leading-relaxed">Expanding validated strategies into long-term revenue pillars.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-layer py-40 px-6">
+        <div class="max-w-5xl mx-auto glass-panel p-24 md:p-36 rounded-[5rem] text-center fade-in interactive">
+            <p class="sub-header mb-12">Sovereign Protocol</p>
+            <h2 class="font-display font-800 text-5xl md:text-7xl mb-16 tracking-[-0.05em] uppercase leading-tight">
+                Secure Your <span class="text-gradient">Growth</span>
+            </h2>
+            <div class="space-y-12">
+                <a href="mailto:team@withaq.info" class="block text-2xl md:text-4xl font-display font-700 hover:text-electric transition-all tracking-tighter">team@withaq.info</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="content-layer py-12 text-center opacity-10">
+        <p class="text-[7px] tracking-[1em] font-black uppercase">Dubai Unit • Sovereign System v2.1</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const particleCount = 4500;
+        const geo = new THREE.BufferGeometry();
+        const pos = new Float32Array(particleCount * 3);
+        
+        for(let i=0; i < particleCount * 3; i+=3) {
+            pos[i] = (Math.random() - 0.5) * 12;     
+            pos[i+1] = (Math.random() - 0.5) * 12; 
+            pos[i+2] = (Math.random() - 0.5) * 6;   
+        }
+
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        const mat = new THREE.PointsMaterial({ size: 0.025, color: 0xFFF0F5, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+        const points = new THREE.Points(geo, mat);
+        scene.add(points);
+        camera.position.z = 13;
+
+        let mouseX = 0, mouseY = 0, clickPulse = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 18;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * -18;
+        });
+        document.addEventListener('mousedown', () => { clickPulse = 1.4; });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const scroll = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            const positions = points.geometry.attributes.position.array;
+            if (clickPulse > 0) clickPulse *= 0.95;
+
+            mat.color.setHex(scroll > 0.4 ? 0xFFD700 : 0xFFF0F5);
+
+            for(let i=0; i < positions.length; i+=3) {
+                const dx = mouseX - positions[i];
+                const dy = mouseY - positions[i+1];
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 4) {
+                    positions[i] += dx * 0.04;
+                    positions[i+1] += dy * 0.04;
+                }
+                if (clickPulse > 0.01) {
+                    positions[i] += (positions[i] * 0.04) * clickPulse;
+                    positions[i+1] += (positions[i+1] * 0.04) * clickPulse;
+                }
+                positions[i] += Math.sin(Date.now() * 0.0008 + i) * 0.002;
+                positions[i+1] += Math.cos(Date.now() * 0.0008 + i) * 0.002;
+            }
+            
+            points.geometry.attributes.position.needsUpdate = true;
+            points.rotation.y += 0.0003 + (scroll * 0.006);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        document.addEventListener('mousemove', e => {
+            dot.style.left = ring.style.left = e.clientX + 'px';
+            dot.style.top = ring.style.top = e.clientY + 'px';
+        });
+
+        const obs = new IntersectionObserver(ents => ents.forEach(en => en.isIntersecting && en.target.classList.add('visible')), {threshold: 0.1});
+        document.querySelectorAll('.fade-in').forEach(f => obs.observe(f));
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
