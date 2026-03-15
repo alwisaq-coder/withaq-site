@@ -22,11 +22,9 @@
     </script>
 
     <style>
-        /* BASE RESET */
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         body { background-color: #020202; color: #ffffff; overflow-x: hidden; font-family: 'Inter', sans-serif; line-height: 1.6; }
 
-        /* NOISE OVERLAY FOR DEPTH */
         body::before {
             content: "";
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -34,7 +32,6 @@
             opacity: 0.03; z-index: 9998; pointer-events: none;
         }
 
-        /* SCANNER REVEAL */
         #scanner {
             position: fixed; top: 0; left: 0; width: 100%; height: 2px;
             background: linear-gradient(90deg, transparent, #12F0DE, #8A2BE2, transparent);
@@ -51,7 +48,6 @@
         }
         @keyframes flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* GLASS MORPHISM */
         .glass-panel {
             background: rgba(255, 255, 255, 0.012);
             backdrop-filter: blur(40px);
@@ -60,33 +56,131 @@
         }
         .glass-panel:hover { border-color: rgba(18, 240, 222, 0.3); background: rgba(255, 255, 255, 0.02); }
 
+        .glass-panel-violet:hover { border-color: rgba(138, 43, 226, 0.3); }
+        .glass-panel-gold:hover { border-color: rgba(255, 215, 0, 0.3); }
+        .glass-panel-pink:hover { border-color: rgba(255, 182, 193, 0.3); }
+
         #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .content-layer { position: relative; z-index: 10; pointer-events: none; }
         .interactive { pointer-events: auto; }
 
-        /* CURSOR */
         .cursor-dot { position: fixed; width: 4px; height: 4px; background: #12F0DE; border-radius: 50%; z-index: 10000; pointer-events: none; transform: translate(-50%, -50%); box-shadow: 0 0 10px #12F0DE; }
         .cursor-ring { position: fixed; width: 35px; height: 35px; border: 1px solid rgba(18, 240, 222, 0.2); border-radius: 50%; z-index: 10000; pointer-events: none; transition: transform 0.2s ease-out; transform: translate(-50%, -50%); }
 
-        /* MINIMALIST TYPOGRAPHY */
         .title-sm { font-size: clamp(2rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.05em; font-weight: 800; text-transform: uppercase; }
-        .sub-header { font-size: 9px; tracking: 0.8em; font-weight: 900; text-transform: uppercase; opacity: 0.4; }
+        .sub-header { font-size: 9px; letter-spacing: 0.8em; font-weight: 900; text-transform: uppercase; opacity: 0.4; }
 
         .fade-in { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1); }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-        /* TICKER */
-        .ticker-wrap { 
+        .ticker-wrap {
             overflow: hidden; width: 100%; background: rgba(255,255,255,0.01);
-            border-top: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03); 
+            border-top: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);
             padding: 20px 0; position: relative; z-index: 20;
         }
         .ticker { display: flex; white-space: nowrap; animation: ticker 55s linear infinite; }
-        .ticker span { 
-            display: inline-block; font-size: 8px; font-weight: 900; letter-spacing: 0.6em; 
+        .ticker span {
+            display: inline-block; font-size: 8px; font-weight: 900; letter-spacing: 0.6em;
             text-transform: uppercase; padding: 0 60px; color: rgba(255,255,255,0.25);
         }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* PRICING TOGGLE */
+        .plan-badge {
+            display: inline-block; padding: 4px 16px; border-radius: 999px; font-size: 7px;
+            letter-spacing: 0.4em; font-weight: 900; text-transform: uppercase;
+        }
+
+        /* PRICING TABLE */
+        .pricing-grid { display: grid; gap: 1.5rem; }
+        @media (min-width: 768px) { .pricing-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        .price-tag {
+            font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800;
+            letter-spacing: -0.05em; line-height: 1;
+        }
+
+        .feature-list li {
+            padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 300;
+            display: flex; align-items: flex-start; gap: 10px;
+        }
+        .feature-list li .check {
+            flex-shrink: 0; width: 14px; height: 14px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 8px; margin-top: 1px;
+        }
+
+        /* SOCIAL RETAINER TABLE */
+        .retainer-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .retainer-table th {
+            text-align: left; padding: 14px 16px; font-size: 7px; letter-spacing: 0.4em;
+            font-weight: 900; text-transform: uppercase; color: rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .retainer-table td {
+            padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: rgba(255,255,255,0.4); font-weight: 300;
+        }
+        .retainer-table tr:hover td { color: rgba(255,255,255,0.6); }
+
+        /* TEAM CARDS */
+        .team-card {
+            text-align: center; padding: 3rem 2rem;
+            background: rgba(255,255,255,0.008); border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 2rem; transition: all 0.6s ease;
+        }
+        .team-card:hover { border-color: rgba(18, 240, 222, 0.2); transform: translateY(-4px); }
+        .team-avatar {
+            width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 1.5rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 800; font-family: 'Syne', sans-serif;
+        }
+
+        /* TESTIMONIAL */
+        .testimonial-card {
+            position: relative; padding: 3rem; border-left: 2px solid rgba(18, 240, 222, 0.15);
+            background: rgba(255,255,255,0.005);
+        }
+        .testimonial-card::before {
+            content: '"'; position: absolute; top: 10px; left: 20px;
+            font-size: 4rem; font-family: 'Syne', sans-serif; color: rgba(18, 240, 222, 0.08);
+            line-height: 1;
+        }
+
+        /* COMPLIANCE BADGE */
+        .compliance-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 20px; border-radius: 999px; font-size: 8px;
+            letter-spacing: 0.3em; font-weight: 900; text-transform: uppercase;
+            border: 1px solid rgba(18, 240, 222, 0.15); color: rgba(18, 240, 222, 0.6);
+        }
+
+        /* ACCORDION */
+        .accordion-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .accordion-header {
+            width: 100%; padding: 24px 0; display: flex; justify-content: space-between;
+            align-items: center; background: none; border: none; color: white;
+            font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: -0.02em; text-align: left;
+        }
+        .accordion-header:hover { color: #12F0DE; }
+        .accordion-header .icon {
+            width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+            transition: transform 0.4s ease; flex-shrink: 0;
+        }
+        .accordion-header.active .icon { transform: rotate(45deg); }
+        .accordion-body {
+            max-height: 0; overflow: hidden; transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .accordion-body.open { max-height: 800px; }
+        .accordion-content { padding: 0 0 24px 0; color: rgba(255,255,255,0.35); font-size: 12px; line-height: 1.8; }
+
+        /* ROI METRIC BAR */
+        .roi-bar-bg { height: 4px; background: rgba(255,255,255,0.04); border-radius: 999px; overflow: hidden; }
+        .roi-bar-fill { height: 100%; border-radius: 999px; width: 0; transition: width 2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .roi-bar-fill.animated { width: var(--target-width); }
 
         @media (max-width: 768px) { * { cursor: auto; } .cursor-dot, .cursor-ring { display: none; } }
     </style>
@@ -98,93 +192,1015 @@
     <div class="cursor-ring" id="cursorRing"></div>
     <canvas id="three-canvas"></canvas>
 
+    <!-- ═══════════════════════════════════════════ NAV ═══════════════════════════════════════════ -->
     <nav class="fixed top-0 left-0 w-full z-50 content-layer p-8">
         <div class="max-w-[1700px] mx-auto flex justify-between items-center">
             <div class="font-display text-xl tracking-[-0.1em] font-800 uppercase">With<span class="text-gradient">AQ</span></div>
-            <div class="flex items-center gap-12">
-                <span class="hidden lg:block text-[7px] tracking-[0.8em] text-white/10 font-black uppercase">Unit 04 • Revenue Logic</span>
+            <div class="flex items-center gap-6 md:gap-12">
+                <span class="hidden lg:block text-[7px] tracking-[0.8em] text-white/10 font-black uppercase">Revenue Platform • UAE</span>
+                <a href="#plans" class="interactive hidden md:inline-block px-6 py-3 rounded-full border border-white/5 text-[8px] tracking-[0.4em] font-black hover:bg-electric hover:text-black transition-all">PLANS</a>
                 <a href="mailto:connect@withaq.info" class="interactive px-8 py-3 rounded-full border border-white/5 text-[8px] tracking-[0.4em] font-black hover:bg-white hover:text-black transition-all">CONNECT</a>
             </div>
         </div>
     </nav>
 
+    <!-- ═══════════════════════════════════════════ HERO ═══════════════════════════════════════════ -->
     <section class="content-layer min-h-screen flex flex-col items-center justify-center text-center px-6">
         <div class="max-w-4xl">
-            <p class="fade-in sub-header mb-8 text-electric">Intelligence Deployment</p>
-            <h1 class="title-sm fade-in mb-16">
-                Engineered for <span class="text-gradient">Speed</span>.<br>
-                Validated in the <span class="text-gradient">Market</span>.
+            <p class="fade-in sub-header mb-8 text-electric">UAE's Proven Revenue Platform for SME Pioneers</p>
+            <h1 class="title-sm fade-in mb-8">
+                Built for <span class="text-gradient">Speed</span>.<br>
+                Proven in the <span class="text-gradient">Emirates</span>.
             </h1>
-            <div class="fade-in interactive">
-                <a href="#intel" class="group relative px-16 py-6 rounded-full border border-white/5 transition-all overflow-hidden inline-block">
+            <p class="fade-in text-white/20 text-sm md:text-base font-light max-w-2xl mx-auto mb-16 leading-relaxed">
+                Affordable marketing, exponential growth. One Agency. Multiple Solutions. Zero Hassle.
+                We align your brand, digital presence, content, and sales into one cohesive, high-performing system.
+            </p>
+            <div class="fade-in flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#plans" class="interactive group relative px-16 py-6 rounded-full border border-white/5 transition-all overflow-hidden inline-block">
                     <span class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></span>
-                    <span class="relative text-[9px] tracking-[0.6em] font-black uppercase group-hover:text-black transition-colors">Enter System</span>
+                    <span class="relative text-[9px] tracking-[0.6em] font-black uppercase group-hover:text-black transition-colors">View Plans</span>
+                </a>
+                <a href="tel:+971523595930" class="interactive group relative px-16 py-6 rounded-full border border-electric/10 transition-all overflow-hidden inline-block">
+                    <span class="absolute inset-0 bg-electric translate-y-full group-hover:translate-y-0 transition-transform duration-500"></span>
+                    <span class="relative text-[9px] tracking-[0.6em] font-black uppercase text-electric group-hover:text-black transition-colors">Free Strategy Call</span>
                 </a>
             </div>
         </div>
     </section>
 
+    <!-- ═══════════════════════════════════════════ TICKER ═══════════════════════════════════════════ -->
     <div class="content-layer ticker-wrap interactive">
         <div class="ticker">
-            <span>+34% Efficiency</span><span>•</span><span>Dubai SME Growth Unit</span><span>•</span><span>Proprietary Lead Qualification</span><span>•</span><span>High-Frequency ROI</span><span>•</span><span>Sovereign Assets</span><span>•</span>
-            <span>+34% Efficiency</span><span>•</span><span>Dubai SME Growth Unit</span><span>•</span><span>Proprietary Lead Qualification</span><span>•</span><span>High-Frequency ROI</span><span>•</span><span>Sovereign Assets</span>
+            <span>80–150% More Leads</span><span>•</span><span>DNCR & Resolution 56 Compliant</span><span>•</span><span>15–25% More Sales-Qualified Meetings</span><span>•</span><span>70–150% Increase in Reach</span><span>•</span><span>50–100% More Engagement</span><span>•</span><span>Zero B2B Regulatory Risk</span><span>•</span><span>Measurable Results in 45–60 Days</span><span>•</span>
+            <span>80–150% More Leads</span><span>•</span><span>DNCR & Resolution 56 Compliant</span><span>•</span><span>15–25% More Sales-Qualified Meetings</span><span>•</span><span>70–150% Increase in Reach</span><span>•</span><span>50–100% More Engagement</span><span>•</span><span>Zero B2B Regulatory Risk</span><span>•</span><span>Measurable Results in 45–60 Days</span><span>•</span>
         </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════ ABOUT ═══════════════════════════════════════════ -->
+    <section id="about" class="content-layer py-60 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-24 mb-24 border-b border-white/5 pb-16">
+                <div class="fade-in md:w-1/2">
+                    <p class="sub-header mb-4 text-electric">About WithAQ</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                        The Integrated <span class="text-gradient">Revenue Engine</span>
+                    </h2>
+                </div>
+                <div class="fade-in md:w-1/2 flex items-end">
+                    <p class="text-white/30 text-sm md:text-base font-light leading-relaxed">
+                        WithAQ builds the Integrated Revenue Engine for Dubai SMEs. We align your brand, digital presence, content, and sales into one cohesive, high-performing system. We eliminate fragmented tactics, giving you a clear roadmap to predictable, scalable growth — ensuring your marketing dollars work harder in the competitive Dubai market.
+                    </p>
+                </div>
+            </div>
+
+            <!-- VISION & MISSION -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-24">
+                <div class="glass-panel p-12 rounded-[2.5rem] fade-in interactive">
+                    <p class="text-electric/40 font-black text-[8px] tracking-widest mb-6">OUR VISION</p>
+                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Measurable ROI</h3>
+                    <p class="text-white/25 font-light text-xs leading-relaxed">
+                        To deliver measurable ROI and accelerate market share for ambitious UAE SMEs. We offer affordable marketing solutions as the best marketing company for small businesses in Dubai — helping you find new customers and get more revenue for your business in the UAE.
+                    </p>
+                </div>
+                <div class="glass-panel p-12 rounded-[2.5rem] fade-in interactive">
+                    <p class="text-violet/40 font-black text-[8px] tracking-widest mb-6">THE OPPORTUNITY</p>
+                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Precision Over Waste</h3>
+                    <p class="text-white/25 font-light text-xs leading-relaxed">
+                        The opportunity for SMEs in a busy market like Dubai is to stop wasting money on broad, general advertising and start using precision technology to reach customers. We transform marketing from a cost center into a revenue platform using data and technology.
+                    </p>
+                </div>
+            </div>
+
+            <!-- COMPLIANCE BADGE -->
+            <div class="fade-in text-center mb-8">
+                <div class="compliance-badge inline-flex interactive">
+                    <span>🛡</span>
+                    <span>100% DNCR & UAE Cabinet Resolution No. 56 of 2024 Compliant</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ 3-STEP STRATEGY ═══════════════════════════════════════════ -->
     <section id="intel" class="content-layer py-60 px-6">
         <div class="max-w-5xl mx-auto">
             <div class="flex flex-col mb-24 border-b border-white/5 pb-16">
                 <div class="fade-in mb-8">
-                    <p class="sub-header mb-4">Framework</p>
+                    <p class="sub-header mb-4">Growth Roadmap</p>
                     <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
-                        The <span class="text-gradient">Core</span> Intelligence
+                        Unlock Your <span class="text-gradient">Growth</span> Roadmap
                     </h2>
                 </div>
                 <div class="fade-in max-w-xl">
                     <p class="text-white/30 text-sm md:text-base font-light leading-relaxed">
-                        Algorithmic execution frameworks designed to turn audience attention into scalable revenue pillars with absolute certainty.
+                        Three precision phases designed to turn audience attention into scalable revenue pillars with absolute certainty.
                     </p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="glass-panel p-12 rounded-[2.5rem] fade-in interactive">
-                    <p class="text-electric/40 font-black text-[8px] tracking-widest mb-6">01 / DISCOVERY</p>
-                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Path Analysis</h3>
-                    <p class="text-white/20 font-light text-xs leading-relaxed">Mapping high-intent movements via site intelligence.</p>
+                    <p class="text-electric/40 font-black text-[8px] tracking-widest mb-6">01 / DEFINE</p>
+                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Define the Opportunity</h3>
+                    <p class="text-white/20 font-light text-xs leading-relaxed">
+                        Use Mobility Data and Site Intelligence to precisely map audience paths. Define exactly who and where your target customer is before spending a single dirham on ads.
+                    </p>
                 </div>
                 <div class="glass-panel p-12 rounded-[2.5rem] fade-in interactive">
                     <p class="text-violet/40 font-black text-[8px] tracking-widest mb-6">02 / LAUNCH</p>
-                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Kinetic Execution</h3>
-                    <p class="text-white/20 font-light text-xs leading-relaxed">High-frequency creative deployment across DOOH infrastructures.</p>
+                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Launch Targeted Campaign</h3>
+                    <p class="text-white/20 font-light text-xs leading-relaxed">
+                        Execute high-impact campaigns using Dynamic Creative and the DOOH Platform. Deliver personalized, real-time messages to customers the moment they are receptive.
+                    </p>
                 </div>
                 <div class="glass-panel p-12 rounded-[2.5rem] fade-in interactive">
                     <p class="text-gold/40 font-black text-[8px] tracking-widest mb-6">03 / SCALE</p>
-                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Equity Growth</h3>
-                    <p class="text-white/20 font-light text-xs leading-relaxed">Expanding validated strategies into long-term revenue pillars.</p>
+                    <h3 class="font-display text-lg font-800 uppercase tracking-tighter mb-4">Scale for Exponential Growth</h3>
+                    <p class="text-white/20 font-light text-xs leading-relaxed">
+                        Lock in success using a Full Revenue Retainer as your Strategic Partner. Optimize ROI and aggressively scale the winning strategy across new regions or products.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ═══════════════════════════════════════════ ROI METRICS ═══════════════════════════════════════════ -->
     <section class="content-layer py-40 px-6">
-        <div class="max-w-5xl mx-auto glass-panel p-24 md:p-36 rounded-[5rem] text-center fade-in interactive">
-            <p class="sub-header mb-12">Sovereign Protocol</p>
-            <h2 class="font-display font-800 text-5xl md:text-7xl mb-16 tracking-[-0.05em] uppercase leading-tight">
-                Secure Your <span class="text-gradient">Growth</span>
-            </h2>
-            <div class="space-y-12">
-                <a href="mailto:team@withaq.info" class="block text-2xl md:text-4xl font-display font-700 hover:text-electric transition-all tracking-tighter">team@withaq.info</a>
+        <div class="max-w-5xl mx-auto">
+            <div class="fade-in mb-24">
+                <p class="sub-header mb-4 text-gold">Expected Results</p>
+                <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                    Revenue <span class="text-gradient">Impact</span> Metrics
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
+                <!-- Metric 1 -->
+                <div class="fade-in interactive">
+                    <div class="flex justify-between items-baseline mb-3">
+                        <span class="text-white/50 text-xs font-light">Dedicated Full-Funnel Team</span>
+                        <span class="text-electric font-display font-800 text-sm">100%</span>
+                    </div>
+                    <div class="roi-bar-bg"><div class="roi-bar-fill bg-electric" style="--target-width: 100%"></div></div>
+                </div>
+                <!-- Metric 2 -->
+                <div class="fade-in interactive">
+                    <div class="flex justify-between items-baseline mb-3">
+                        <span class="text-white/50 text-xs font-light">Faster Market Capture</span>
+                        <span class="text-electric font-display font-800 text-sm">50%</span>
+                    </div>
+                    <div class="roi-bar-bg"><div class="roi-bar-fill bg-electric" style="--target-width: 50%"></div></div>
+                </div>
+                <!-- Metric 3 -->
+                <div class="fade-in interactive">
+                    <div class="flex justify-between items-baseline mb-3">
+                        <span class="text-white/50 text-xs font-light">Higher Conversion Rate</span>
+                        <span class="text-violet font-display font-800 text-sm">2X</span>
+                    </div>
+                    <div class="roi-bar-bg"><div class="roi-bar-fill bg-violet" style="--target-width: 80%"></div></div>
+                </div>
+                <!-- Metric 4 -->
+                <div class="fade-in interactive">
+                    <div class="flex justify-between items-baseline mb-3">
+                        <span class="text-white/50 text-xs font-light">Improved UX Score</span>
+                        <span class="text-violet font-display font-800 text-sm">15–25%</span>
+                    </div>
+                    <div class="roi-bar-bg"><div class="roi-bar-fill bg-violet" style="--target-width: 25%"></div></div>
+                </div>
+                <!-- Metric 5 -->
+                <div class="fade-in interactive">
+                    <div class="flex justify-between items-baseline mb-3">
+                        <span class="text-white/50 text-xs font-light">Social Proof & Reach</span>
+                        <span class="text-gold font-display font-800 text-sm">3–5X</span>
+                    </div>
+                    <div class="roi-bar-bg"><div class="roi-bar-fill bg-gold" style="--target-width: 90%"></div></div>
+                </div>
+                <!-- Metric 6 -->
+                <div class="fade-in interactive">
+                    <div class="flex justify-between items-baseline mb-3">
+                        <span class="text-white/50 text-xs font-light">Increased Repeat Purchase Rate</span>
+                        <span class="text-gold font-display font-800 text-sm">1.5X</span>
+                    </div>
+                    <div class="roi-bar-bg"><div class="roi-bar-fill bg-gold" style="--target-width: 60%"></div></div>
+                </div>
+                <!-- Metric 7 -->
+                <div class="fade-in interactive">
+                    <div class="flex justify-between items-baseline mb-3">
+                        <span class="text-white/50 text-xs font-light">Dominance in Local Search</span>
+                        <span class="text-pink font-display font-800 text-sm">100%</span>
+                    </div>
+                    <div class="roi-bar-bg"><div class="roi-bar-fill bg-pink" style="--target-width: 100%"></div></div>
+                </div>
+                <!-- Metric 8 -->
+                <div class="fade-in interactive">
+                    <div class="flex justify-between items-baseline mb-3">
+                        <span class="text-white/50 text-xs font-light">Revenue Increase (Premium)</span>
+                        <span class="text-pink font-display font-800 text-sm">+25–40%</span>
+                    </div>
+                    <div class="roi-bar-bg"><div class="roi-bar-fill bg-pink" style="--target-width: 40%"></div></div>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="content-layer py-12 text-center opacity-10">
-        <p class="text-[7px] tracking-[1em] font-black uppercase">Dubai Unit • Sovereign System v2.1</p>
+    <!-- ═══════════════════════════════════════════ PRICING PLANS ═══════════════════════════════════════════ -->
+    <section id="plans" class="content-layer py-60 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="fade-in mb-24 text-center">
+                <p class="sub-header mb-4 text-electric">Subscription Plans</p>
+                <h2 class="font-display text-4xl md:text-6xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                    Choose Your <span class="text-gradient">Growth</span> Tier
+                </h2>
+                <p class="text-white/20 text-sm font-light mt-6 max-w-2xl mx-auto">
+                    Predictable, affordable monthly fees. Avoid costly full-time hires. Scale services as your business grows. Measurable results within 45–60 days.
+                </p>
+            </div>
+
+            <div class="pricing-grid mb-12">
+                <!-- ─── STARTER ─── -->
+                <div class="glass-panel rounded-[2.5rem] p-10 fade-in interactive flex flex-col">
+                    <div class="mb-8">
+                        <span class="plan-badge bg-electric/10 text-electric mb-4">Starter</span>
+                        <div class="price-tag text-white mt-4">4,249<span class="text-sm text-white/20 font-light ml-2">AED/mo</span></div>
+                            <p class="text-white/15 text-[10px] mt-2 font-light">Less than half the cost of in-house staff</p>
+                    </div>
+                    <ul class="feature-list flex-1 mb-8">
+                        <li><span class="check bg-electric/10 text-electric">✓</span>1 DNCR-Compliant Telesales Agent</li>
+                        <li><span class="check bg-electric/10 text-electric">✓</span>Up to 150 calls/day during business hours (9AM–6PM)</li>
+                        <li><span class="check bg-electric/10 text-electric">✓</span>Local, company-registered number</li>
+                        <li><span class="check bg-electric/10 text-electric">✓</span>4 social posts + 4 reels / month</li>
+                        <li><span class="check bg-electric/10 text-electric">✓</span>Google Business basic listing + optimization</li>
+                        <li><span class="check bg-electric/10 text-electric">✓</span>1 testimonial video (30 seconds max)</li>
+                        <li><span class="check bg-electric/10 text-electric">✓</span>Facebook/IG ads (up to AED 600 included)</li>
+                        <li><span class="check bg-electric/10 text-electric">✓</span>Monthly report with improvement tips</li>
+                        <li><span class="check bg-electric/10 text-electric">✓</span>Sales-Focused Tracking</li>
+                    </ul>
+                    <div class="border-t border-white/5 pt-6 mb-6">
+                        <p class="text-[8px] tracking-[0.3em] font-black uppercase text-white/20 mb-3">Expected ROI</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-electric/5 text-electric/60">15–30% More Leads</span>
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-electric/5 text-electric/60">30–60% Social Reach</span>
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-electric/5 text-electric/60">Zero B2B Risk</span>
+                        </div>
+                    </div>
+                    <a href="https://www.withaq.info" class="interactive block text-center py-4 rounded-full border border-electric/20 text-[9px] tracking-[0.4em] font-black uppercase text-electric hover:bg-electric hover:text-black transition-all">Get Started</a>
+                </div>
+
+                <!-- ─── GROWTH ─── -->
+                <div class="glass-panel glass-panel-violet rounded-[2.5rem] p-10 fade-in interactive flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-violet to-transparent"></div>
+                    <div class="mb-8">
+                        <span class="plan-badge bg-violet/10 text-violet mb-4">Growth — Popular</span>
+                        <div class="price-tag text-white mt-4">8,649<span class="text-sm text-white/20 font-light ml-2">AED/mo</span></div>
+                        <p class="text-white/15 text-[10px] mt-2 font-light">Scale rapidly with a full revenue team</p>
+                    </div>
+                    <ul class="feature-list flex-1 mb-8">
+                        <li><span class="check bg-violet/10 text-violet">✓</span>3 Dedicated Telesales Agents</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>1 Case Study & 1 Sales Script</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>Full DNCR-Compliant Services</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>Meta (Facebook/Instagram) & Google Ads Mgmt</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>Email marketing campaign + WhatsApp broadcasts</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>36+ Posts/month with proactive engagement</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>Closed-Loop Revenue Reporting & Funnel Setup</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>Full Revenue Team: Sales + Content + Ads + Conversion</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>Up to AED 1,200 ad spend included</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>12 Reels, 12 Stories, 12 Posts (5–10s avg)</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>1-Month Email Campaign Setup</li>
+                        <li><span class="check bg-violet/10 text-violet">✓</span>Full CRM Dashboard Setup</li>
+                    </ul>
+                    <div class="border-t border-white/5 pt-6 mb-6">
+                        <p class="text-[8px] tracking-[0.3em] font-black uppercase text-white/20 mb-3">Expected ROI</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-violet/5 text-violet/60">80–150% More Leads</span>
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-violet/5 text-violet/60">70–150% Reach Increase</span>
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-violet/5 text-violet/60">50–100% More Engagement</span>
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-violet/5 text-violet/60">15–25% More SQL Meetings</span>
+                        </div>
+                    </div>
+                    <a href="https://www.withaq.info" class="interactive block text-center py-4 rounded-full bg-violet text-[9px] tracking-[0.4em] font-black uppercase text-white hover:bg-violet/80 transition-all">Scale Now</a>
+                </div>
+
+                <!-- ─── PREMIUM ─── -->
+                <div class="glass-panel glass-panel-gold rounded-[2.5rem] p-10 fade-in interactive flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-gold to-transparent"></div>
+                    <div class="mb-8">
+                        <span class="plan-badge bg-gold/10 text-gold mb-4">Premium</span>
+                        <div class="price-tag text-white mt-4">12,750<span class="text-sm text-white/20 font-light ml-2">AED/mo</span></div>
+                        <p class="text-white/15 text-[10px] mt-2 font-light">Strategic growth & market dominance</p>
+                    </div>
+                    <ul class="feature-list flex-1 mb-8">
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Dedicated Account Team</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Competitor SWOT & Pricing Analysis (Top 3 rivals + trends)</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>SQL-to-Content Strategy Sessions (Reports + growth planning)</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Sales Funnel Audit</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>UX/UI Audit — Review of client website flow</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Logo & Visual Refresh — New design & brand colors</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Google Ads + GMB — Weekly optimization</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Promo/Testimonial/Demo Video (3–4 min, Scripted + Edited)</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>1 Event/month — Filming + social edit</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>3 Influencer Campaigns — Outreach + negotiation</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Instagram Shop — Catalog + tagging</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Remarketing — Funnels + sequences</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Bi-weekly Revenue Funnel Reviews</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>WhatsApp + Email Setup</li>
+                        <li><span class="check bg-gold/10 text-gold">✓</span>Enhanced Ads + Business Profile Management</li>
+                    </ul>
+                    <div class="border-t border-white/5 pt-6 mb-6">
+                        <p class="text-[8px] tracking-[0.3em] font-black uppercase text-white/20 mb-3">Expected ROI</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-gold/5 text-gold/60">Revenue: +25–40%</span>
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-gold/5 text-gold/60">Reach: +150–250%</span>
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-gold/5 text-gold/60">Engagement: +100–200%</span>
+                            <span class="text-[9px] px-3 py-1 rounded-full bg-gold/5 text-gold/60">Leads: +150–250%</span>
+                        </div>
+                    </div>
+                    <a href="https://www.withaq.info" class="interactive block text-center py-4 rounded-full bg-gold text-[9px] tracking-[0.4em] font-black uppercase text-black hover:bg-gold/80 transition-all">Dominate Market</a>
+                </div>
+            </div>
+
+            <!-- COMPLIANCE NOTE -->
+            <div class="fade-in text-center mt-8">
+                <p class="text-white/10 text-[9px] font-light max-w-3xl mx-auto leading-relaxed">
+                    <span class="text-electric/40 font-bold">Compliance Note (Non-Negotiable):</span> All telesales services are conducted by a local, company-registered number and are compliant with UAE Cabinet Resolution No. 56 of 2024. Agents are trained on the Do Not Call Registry (DNCR) and strictly adhere to calling hours (9:00 AM – 6:00 PM).
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ SOCIAL MEDIA RETAINERS ═══════════════════════════════════════════ -->
+    <section class="content-layer py-60 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="fade-in mb-24">
+                <p class="sub-header mb-4 text-violet">Monthly Retainers</p>
+                <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                    Social Content & <span class="text-gradient">Engagement</span>
+                </h2>
+            </div>
+
+            <div class="glass-panel rounded-[2.5rem] overflow-hidden fade-in interactive">
+                <div class="overflow-x-auto">
+                    <table class="retainer-table min-w-[700px]">
+                        <thead>
+                            <tr>
+                                <th>Plan</th>
+                                <th>Accounts</th>
+                                <th>Content</th>
+                                <th>Platforms</th>
+                                <th>Monthly</th>
+                                <th>3 Months</th>
+                                <th>6 Months</th>
+                                <th>12 Months</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-display font-700 text-electric/60 text-xs uppercase">Social Basic</td>
+                                <td>1 Account</td>
+                                <td>8 posts + 2 Reels</td>
+                                <td>IG or FB</td>
+                                <td class="text-white/60 font-semibold">AED 599</td>
+                                <td>AED 1,600</td>
+                                <td>AED 3,200</td>
+                                <td>AED 6,400</td>
+                            </tr>
+                            <tr>
+                                <td class="font-display font-700 text-violet/60 text-xs uppercase">Social Standard</td>
+                                <td>2 Accounts</td>
+                                <td>12 posts + 4 Reels</td>
+                                <td>FB + IG</td>
+                                <td class="text-white/60 font-semibold">AED 799</td>
+                                <td>AED 2,200</td>
+                                <td>AED 4,400</td>
+                                <td>AED 8,800</td>
+                            </tr>
+                            <tr>
+                                <td class="font-display font-700 text-gold/60 text-xs uppercase">Social Pro</td>
+                                <td>3 Accounts</td>
+                                <td>16 posts + 6 Reels + Stories</td>
+                                <td>FB + IG + LinkedIn</td>
+                                <td class="text-white/60 font-semibold">AED 999</td>
+                                <td>AED 2,600</td>
+                                <td>AED 5,200</td>
+                                <td>AED 10,400</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-8 border-t border-white/3">
+                    <p class="text-white/15 text-[10px] font-light leading-relaxed">
+                        <span class="text-white/30 font-semibold">All plans include:</span> Respond to messages & comments • Paid Ad Campaign
+                                                Management (AED 400/mo, excludes ad spend) • Graphic Design for Custom Content (AED 300/mo) • Extra Post AED 50 • Extra Reel AED 150 • Story Package AED 200/5 stories
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ A LA CARTE SERVICES ═══════════════════════════════════════════ -->
+    <section class="content-layer py-60 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="fade-in mb-24">
+                <p class="sub-header mb-4 text-pink">À La Carte</p>
+                <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                    Next-Level <span class="text-gradient">Services</span>
+                </h2>
+                <p class="text-white/20 text-sm font-light mt-6 max-w-2xl">
+                    Precision add-ons to amplify any plan or run as standalone campaigns.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- ACCORDION: Custom Content Packages -->
+                <div class="accordion-item fade-in interactive">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Custom Content Packages</span>
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-electric/50 text-[8px] tracking-widest font-black mb-3">HIGH-VALUE SOCIAL CONTENT</p>
+                                    <p class="text-white/40 text-xs mb-4">10 custom posts + 5 stories</p>
+                                    <p class="font-display font-800 text-lg text-white/80">AED 1,400</p>
+                                </div>
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-violet/50 text-[8px] tracking-widest font-black mb-3">PRO PRODUCT SESSION</p>
+                                    <p class="text-white/40 text-xs mb-4">15 edited professional photos</p>
+                                    <p class="font-display font-800 text-lg text-white/80">AED 1,000 <span class="text-white/15 text-xs font-light line-through ml-2">AED 2,000</span></p>
+                                </div>
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-gold/50 text-[8px] tracking-widest font-black mb-3">RESTAURANT PACK</p>
+                                    <p class="text-white/40 text-xs mb-4">25 photos + 1 short reel</p>
+                                    <p class="font-display font-800 text-lg text-white/80">AED 1,000 <span class="text-white/15 text-xs font-light line-through ml-2">AED 2,000</span></p>
+                                </div>
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-pink/50 text-[8px] tracking-widest font-black mb-3">EVENT PACK</p>
+                                    <p class="text-white/40 text-xs mb-4">Unlimited photos for 1 hour of coverage</p>
+                                    <p class="font-display font-800 text-lg text-white/80">AED 1,000 <span class="text-white/15 text-xs font-light line-through ml-2">AED 2,000</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACCORDION: Paid Ads Retainers -->
+                <div class="accordion-item fade-in interactive">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Paid Ads Retainers</span>
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-electric/50 text-[8px] tracking-widest font-black mb-3">FACEBOOK / INSTAGRAM ADS</p>
+                                    <p class="text-white/40 text-xs mb-4">Full campaign management & optimization</p>
+                                    <p class="font-display font-800 text-lg text-white/80">AED 2,500<span class="text-white/20 text-xs font-light ml-2">/month</span></p>
+                                    <p class="text-white/15 text-[9px] mt-2">Excludes ad spend</p>
+                                </div>
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-violet/50 text-[8px] tracking-widest font-black mb-3">GOOGLE ADS / PPC</p>
+                                    <p class="text-white/40 text-xs mb-4">Search, Display, and Video Ad management</p>
+                                    <p class="font-display font-800 text-lg text-white/80">AED 2,900<span class="text-white/20 text-xs font-light ml-2">/month</span></p>
+                                    <p class="text-white/15 text-[9px] mt-2">Excludes ad spend</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACCORDION: Influencer & SEO -->
+                <div class="accordion-item fade-in interactive">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Influencer Campaigns & SEO</span>
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-gold/50 text-[8px] tracking-widest font-black mb-3">INFLUENCER CAMPAIGN MANAGEMENT</p>
+                                    <p class="text-white/40 text-xs mb-4">Strategy, outreach, negotiation, and reporting</p>
+                                    <p class="font-display font-800 text-lg text-white/80">AED 4,000</p>
+                                    <p class="text-white/15 text-[9px] mt-2">Excludes talent cost</p>
+                                </div>
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-pink/50 text-[8px] tracking-widest font-black mb-3">TECHNICAL SEO AUDIT</p>
+                                    <p class="text-white/40 text-xs mb-4">Full website review for search engine optimization</p>
+                                    <p class="font-display font-800 text-lg text-white/80">AED 2,900</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACCORDION: Photo & Video -->
+                <div class="accordion-item fade-in interactive">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Photo & Video Production</span>
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <div class="glass-panel p-8 rounded-2xl">
+                                <p class="text-electric/50 text-[8px] tracking-widest font-black mb-3">FULL-DAY PHOTO & VIDEO SHOOT</p>
+                                <p class="text-white/40 text-xs mb-2">Full-day shoot with professional equipment and lighting</p>
+                                <p class="text-white/40 text-xs mb-2">Deliverables: 100+ edited images & 2 professional 30-second reels</p>
+                                <p class="text-white/40 text-xs mb-4">Full commercial rights for all delivered assets</p>
+                                <p class="font-display font-800 text-lg text-white/80">Starts from AED 4,900</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACCORDION: App & Web Development -->
+                <div class="accordion-item fade-in interactive">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Custom App & Website Solutions</span>
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-electric/50 text-[8px] tracking-widest font-black mb-3">INITIAL CONSULTATION</p>
+                                    <p class="text-white/40 text-xs mb-4">Discovery session to define your MVP features and user flow</p>
+                                    <p class="font-display font-800 text-lg text-electric">FREE</p>
+                                </div>
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-violet/50 text-[8px] tracking-widest font-black mb-3">BASIC MVP APP DEVELOPMENT</p>
+                                    <p class="text-white/40 text-xs mb-2">Fully functional mobile or web application with core features</p>
+                                    <p class="text-white/40 text-xs mb-2">Timeline: 4–6 Weeks from concept to launch</p>
+                                    <p class="text-white/40 text-xs mb-4">Includes: UX/UI Design, Front-end & Back-end code, 1 month bug fixing</p>
+                                    <p class="font-display font-800 text-lg text-white/80">Starts from AED 15,000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACCORDION: Custom Quote Projects -->
+                <div class="accordion-item fade-in interactive">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Enterprise & Custom Quote Projects</span>
+                        <span class="icon">+</span>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-gold/50 text-[8px] tracking-widest font-black mb-3">BIG ADVERTISING CAMPAIGNS</p>
+                                    <p class="text-white/40 text-xs mb-4">RTA, Billboards, Print Media — buses, huge screens, newspapers, and outdoor/traditional ads</p>
+                                    <p class="font-display font-800 text-sm text-gold/60">Custom Quote</p>
+                                </div>
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-gold/50 text-[8px] tracking-widest font-black mb-3">FULL APP & WEB DEVELOPMENT</p>
+                                    <p class="text-white/40 text-xs mb-4">Large e-commerce websites, multi-functional mobile apps, or specialized software tools</p>
+                                    <p class="font-display font-800 text-sm text-gold/60">Custom Quote</p>
+                                </div>
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-gold/50 text-[8px] tracking-widest font-black mb-3">REAL ESTATE & INDUSTRY LAUNCHES</p>
+                                    <p class="text-white/40 text-xs mb-4">Complete marketing and sales funnels for new real estate developments or major product launches</p>
+                                    <p class="font-display font-800 text-sm text-gold/60">Custom Quote</p>
+                                </div>
+                                <div class="glass-panel p-8 rounded-2xl">
+                                    <p class="text-gold/50 text-[8px] tracking-widest font-black mb-3">BESPOKE 360° CAMPAIGNS</p>
+                                    <p class="text-white/40 text-xs mb-4">Large-scale campaigns for enterprise or government projects requiring specialized expert teams</p>
+                                    <p class="font-display font-800 text-sm text-gold/60">Custom Quote</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ HYBRID REVENUE MODEL ═══════════════════════════════════════════ -->
+    <section class="content-layer py-60 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="fade-in mb-24 text-center">
+                <p class="sub-header mb-4 text-electric">Performance-Based</p>
+                <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                    The Hybrid <span class="text-gradient">Revenue</span> Model
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <p class="text-electric/40 font-black text-[8px] tracking-widest mb-6">FIXED RETAINER</p>
+                    <p class="font-display font-800 text-3xl text-white/90 mb-4">2,950</p>
+                    <p class="text-white/20 text-xs mb-6">AED / month</p>
+                    <ul class="text-left space-y-3">
+                        <li class="text-white/30 text-[11px] font-light flex items-start gap-2"><span class="text-electric mt-0.5">▸</span>1 dedicated telesales agent (DNCR compliant)</li>
+                        <li class="text-white/30 text-[11px] font-light flex items-start gap-2"><span class="text-electric mt-0.5">▸</span>4 social media posts/month</li>
+                        <li class="text-white/30 text-[11px] font-light flex items-start gap-2"><span class="text-electric mt-0.5">▸</span>WhatsApp follow-up message sequences</li>
+                        <li class="text-white/30 text-[11px] font-light flex items-start gap-2"><span class="text-electric mt-0.5">▸</span>Entry-level ad campaign management</li>
+                    </ul>
+                </div>
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <p class="text-violet/40 font-black text-[8px] tracking-widest mb-6">PERFORMANCE FEE</p>
+                    <p class="font-display font-800 text-3xl text-white/90 mb-4">5%</p>
+                    <p class="text-white/20 text-xs mb-6">Commission on confirmed converted leads</p>
+                    <p class="text-white/15 text-[10px] font-light leading-relaxed">You only pay more when we deliver real, confirmed results. Our success is directly tied to yours.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <p class="text-gold/40 font-black text-[8px] tracking-widest mb-6">RISK SHIELD</p>
+                    <p class="font-display font-800 text-3xl text-white/90 mb-4">10,000</p>
+                    <p class="text-white/20 text-xs mb-6">AED fine coverage</p>
+                    <p class="text-white/15 text-[10px] font-light leading-relaxed">Covers official fines from TDRA/DNCR up to AED 10,000. Complete regulatory peace of mind.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ PILOT CAMPAIGN ═══════════════════════════════════════════ -->
+    <section class="content-layer py-60 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="fade-in">
+                    <p class="sub-header mb-4 text-pink">One-Time Launch</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight mb-6">
+                        Pilot <span class="text-gradient">Campaign</span>
+                    </h2>
+                    <p class="text-white/25 text-sm font-light leading-relaxed mb-8">
+                        Test your marketing ideas or new product launches with a comprehensive one-time campaign designed to validate your market before committing to a full retainer.
+                    </p>
+                    <div class="mb-8">
+                        <p class="font-display font-800 text-4xl text-white/90">3,950<span class="text-white/20 text-sm font-light ml-3">AED (One-Time)</span></p>
+                    </div>
+                    <a href="https://www.withaq.info" class="interactive inline-block px-12 py-5 rounded-full border border-pink/20 text-[9px] tracking-[0.4em] font-black uppercase text-pink hover:bg-pink hover:text-black transition-all">Launch Pilot</a>
+                </div>
+                <div class="fade-in interactive">
+                    <div class="glass-panel glass-panel-pink rounded-[2.5rem] p-10">
+                        <p class="text-[8px] tracking-[0.4em] font-black uppercase text-white/20 mb-8">What's Included</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-pink/10 text-pink text-[8px] flex items-center justify-center mt-0.5">✓</span>
+                                <span class="text-white/35 text-xs font-light">6 social media posts & stories</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-pink/10 text-pink text-[8px] flex items-center justify-center mt-0.5">✓</span>
+                                <span class="text-white/35 text-xs font-light">1 short teaser or promo video (up to 30 seconds)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-pink/10 text-pink text-[8px] flex items-center justify-center mt-0.5">✓</span>
+                                <span class="text-white/35 text-xs font-light">250 high-quality printed flyers (design + print included)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-pink/10 text-pink text-[8px] flex items-center justify-center mt-0.5">✓</span>
+                                <span class="text-white/35 text-xs font-light">1 telesales agent for 2 weeks (~60 calls)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-pink/10 text-pink text-[8px] flex items-center justify-center mt-0.5">✓</span>
+                                <span class="text-white/35 text-xs font-light">Campaign performance report including leads summary</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-pink/10 text-pink text-[8px] flex items-center justify-center mt-0.5">✓</span>
+                                <span class="text-white/35 text-xs font-light">Instagram ads management (AED 500 value, excludes ad spend)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-pink/10 text-pink text-[8px] flex items-center justify-center mt-0.5">✓</span>
+                                <span class="text-white/35 text-xs font-light">Merchandise bundle (AED 750 value — e.g. 50 branded pens)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ WHY CHOOSE WITHAQ ═══════════════════════════════════════════ -->
+    <section class="content-layer py-60 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="fade-in mb-24 text-center">
+                <p class="sub-header mb-4 text-gold">The Advantage</p>
+                <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                    Why Choose <span class="text-gradient">WithAQ</span>?
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass-panel p-10 rounded-[2rem] fade-in interactive">
+                    <div class="w-10 h-10 rounded-full bg-electric/5 flex items-center justify-center mb-6">
+                        <span class="text-electric text-sm">💰</span>
+                    </div>
+                    <h3 class="font-display text-sm font-800 uppercase tracking-tighter mb-3">Predictable Fees</h3>
+                    <p class="text-white/20 font-light text-[11px] leading-relaxed">Predictable, affordable monthly fees. No surprises, no hidden costs.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2rem] fade-in interactive">
+                    <div class="w-10 h-10 rounded-full bg-violet/5 flex items-center justify-center mb-6">
+                        <span class="text-violet text-sm">🚫</span>
+                    </div>
+                    <h3 class="font-display text-sm font-800 uppercase tracking-tighter mb-3">No Full-Time Hires</h3>
+                    <p class="text-white/20 font-light text-[11px] leading-relaxed">Avoid costly full-time hires. Get an entire revenue team for less than half the cost of in-house staff.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2rem] fade-in interactive">
+                    <div class="w-10 h-10 rounded-full bg-gold/5 flex items-center justify-center mb-6">
+                        <span class="text-gold text-sm">📈</span>
+                    </div>
+                    <h3 class="font-display text-sm font-800 uppercase tracking-tighter mb-3">Scale As You Grow</h3>
+                    <p class="text-white/20 font-light text-[11px] leading-relaxed">Scale services as your business grows. Start small, expand seamlessly.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2rem] fade-in interactive">
+                    <div class="w-10 h-10 rounded-full bg-pink/5 flex items-center justify-center mb-6">
+                        <span class="text-pink text-sm">🔗</span>
+                    </div>
+                    <h3 class="font-display text-sm font-800 uppercase tracking-tighter mb-3">Integrated System</h3>
+                    <p class="text-white/20 font-light text-[11px] leading-relaxed">Integrated marketing + telesales + lead management. One agency, multiple solutions, zero hassle.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2rem] fade-in interactive">
+                    <div class="w-10 h-10 rounded-full bg-electric/5 flex items-center justify-center mb-6">
+                        <span class="text-electric text-sm">⏱</span>
+                    </div>
+                    <h3 class="font-display text-sm font-800 uppercase tracking-tighter mb-3">Fast Results</h3>
+                    <p class="text-white/20 font-light text-[11px] leading-relaxed">Measurable results within 45–60 days. 50% faster market capture.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2rem] fade-in interactive">
+                    <div class="w-10 h-10 rounded-full bg-violet/5 flex items-center justify-center mb-6">
+                        <span class="text-violet text-sm">🎯</span>
+                    </div>
+                    <h3 class="font-display text-sm font-800 uppercase tracking-tighter mb-3">Dubai-Proven Channels</h3>
+                    <p class="text-white/20 font-light text-[11px] leading-relaxed">Focus on channels proven effective in Dubai's market. Trusted by UAE brands.</p>
+                </div>
+            </div>
+
+            <!-- BONUS -->
+            <div class="fade-in mt-16 text-center">
+                <div class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gold/5 border border-gold/10">
+                    <span class="text-gold text-sm">🎁</span>
+                    <span class="text-gold/60 text-[9px] tracking-[0.3em] font-black uppercase">Bonus: Free strategy session + competitor snapshot</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ PAYMENT OPTIONS ═══════════════════════════════════════════ -->
+    <section class="content-layer py-60 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="fade-in mb-24">
+                <p class="sub-header mb-4 text-electric">Flexible</p>
+                <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                    Payment <span class="text-gradient">Options</span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <div class="w-12 h-12 rounded-full bg-electric/5 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-electric text-lg">💳</span>
+                    </div>
+                    <h3 class="font-display text-sm font-800 uppercase tracking-tighter mb-3">Credit Card</h3>
+                    <p class="text-white/20 font-light text-[11px] leading-relaxed">Full payment or recurring monthly billing. Simple and automatic.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <div class="w-12 h-12 rounded-full bg-violet/5 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-violet text-lg">📝</span>
+                    </div>
+                    <h3 class="font-display text-sm font-800 uppercase tracking-tighter mb-3">Post-Dated Cheques</h3>
+                    <p class="text-white/20 font-light text-[11px] leading-relaxed">Option to pay for 3, 6, or 12 months in advance with PDCs.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <div class="w-12 h-12 rounded-full bg-gold/5 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-gold text-lg">✨</span>
+                    </div>
+                    <h3 class="font-display text-sm font-800 uppercase tracking-tighter mb-3">Tabby Plan</h3>
+                    <p class="text-white/20 font-light text-[11px] leading-relaxed">4 interest-free installments for campaign setup or à la carte services.</p>
+                </div>
+            </div>
+
+            <!-- SPECIAL OFFERS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-panel p-8 rounded-[2rem] fade-in interactive flex items-center gap-6">
+                    <div class="w-10 h-10 rounded-full bg-pink/5 flex items-center justify-center flex-shrink-0">
+                        <span class="text-pink text-sm">📦</span>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xs font-800 uppercase tracking-tighter mb-1">Combo Deal</h3>
+                        <p class="text-white/20 font-light text-[10px]">Includes a Photo Session and a Short Reel at a bundled price.</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-8 rounded-[2rem] fade-in interactive flex items-center gap-6">
+                    <div class="w-10 h-10 rounded-full bg-electric/5 flex items-center justify-center flex-shrink-0">
+                        <span class="text-electric text-sm">👥</span>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xs font-800 uppercase tracking-tighter mb-1">Group Discounts</h3>
+                        <p class="text-white/20 font-light text-[10px]">Book for 3+ team members or products and save.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ TESTIMONIALS ═══════════════════════════════════════════ -->
+    <section class="content-layer py-60 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="fade-in mb-24">
+                <p class="sub-header mb-4 text-violet">Social Proof</p>
+                <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                    Trusted by <span class="text-gradient">UAE Brands</span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="testimonial-card rounded-[2rem] fade-in interactive">
+                    <p class="text-white/30 text-sm font-light leading-relaxed italic mb-6 pl-8">
+                        Withaq helped us build a brand identity customers trust.
+                    </p>
+                    <div class="flex items-center gap-4 pl-8">
+                        <div class="w-8 h-8 rounded-full bg-electric/10 flex items-center justify-center">
+                            <span class="text-electric text-[10px] font-display font-800">GL</span>
+                        </div>
+                        <div>
+                            <p class="text-white/50 text-xs font-semibold">GreenLeaf Organics</p>
+                            <p class="text-white/15 text-[9px]">UAE Brand</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card rounded-[2rem] fade-in interactive">
+                    <p class="text-white/30 text-sm font-light leading-relaxed italic mb-6 pl-8">
+                        Withaq helped us land a major client with stunning visuals.
+                    </p>
+                    <div class="flex items-center gap-4 pl-8">
+                        <div class="w-8 h-8 rounded-full bg-violet/10 flex items-center justify-center">
+                            <span class="text-violet text-[10px] font-display font-800">NB</span>
+                        </div>
+                        <div>
+                            <p class="text-white/50 text-xs font-semibold">Noura B.</p>
+                            <p class="text-white/15 text-[9px]">Vision Studio</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card rounded-[2rem] fade-in interactive">
+                    <p class="text-white/30 text-sm font-light leading-relaxed italic mb-6 pl-8">
+                        Our online presence doubled in just 2 months.
+                    </p>
+                    <div class="flex items-center gap-4 pl-8">
+                        <div class="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
+                            <span class="text-gold text-[10px] font-display font-800">JR</span>
+                        </div>
+                        <div>
+                            <p class="text-white/50 text-xs font-semibold">Jamal R.</p>
+                            <p class="text-white/15 text-[9px]">Eventiq</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card rounded-[2rem] fade-in interactive">
+                    <p class="text-white/30 text-sm font-light leading-relaxed italic mb-6 pl-8">
+                        The Tabby plan made it risk-free to start our campaign.
+                    </p>
+                    <div class="flex items-center gap-4 pl-8">
+                        <div class="w-8 h-8 rounded-full bg-pink/10 flex items-center justify-center">
+                            <span class="text-pink text-[10px] font-display font-800">RA</span>
+                        </div>
+                        <div>
+                            <p class="text-white/50 text-xs font-semibold">Reem A.</p>
+                            <p class="text-white/15 text-[9px]">Local Eats UAE</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+       <!-- ═══════════════════════════════════════════ MEET THE TEAM ═══════════════════════════════════════════ -->
+    <section class="content-layer py-60 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="fade-in mb-24 text-center">
+                <p class="sub-header mb-4 text-electric">The People</p>
+                <h2 class="font-display text-4xl md:text-5xl font-800 tracking-[-0.05em] uppercase leading-tight">
+                    Your Dedicated <span class="text-gradient">Revenue Team</span>
+                </h2>
+                <p class="text-white/20 text-sm font-light mt-6 max-w-2xl mx-auto leading-relaxed">
+                    Behind every campaign is a cross-functional team of strategists, creatives, sales experts, and data analysts — all working as one unit to accelerate your growth in the UAE market.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <div class="w-16 h-16 rounded-full bg-electric/5 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-electric text-2xl">🎯</span>
+                    </div>
+                    <h3 class="font-display text-xs font-800 uppercase tracking-tighter mb-3">Strategy & Operations</h3>
+                    <p class="text-white/20 font-light text-[10px] leading-relaxed">Market research, campaign planning, and end-to-end project management to keep your growth on track.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <div class="w-16 h-16 rounded-full bg-violet/5 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-violet text-2xl">🎨</span>
+                    </div>
+                    <h3 class="font-display text-xs font-800 uppercase tracking-tighter mb-3">Creative & Content</h3>
+                    <p class="text-white/20 font-light text-[10px] leading-relaxed">Designers, videographers, and copywriters crafting scroll-stopping content that converts audiences into customers.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <div class="w-16 h-16 rounded-full bg-gold/5 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-gold text-2xl">📞</span>
+                    </div>
+                    <h3 class="font-display text-xs font-800 uppercase tracking-tighter mb-3">Sales & Outreach</h3>
+                    <p class="text-white/20 font-light text-[10px] leading-relaxed">DNCR-compliant telesales agents and business developers turning leads into revenue-generating relationships.</p>
+                </div>
+                <div class="glass-panel p-10 rounded-[2.5rem] fade-in interactive text-center">
+                    <div class="w-16 h-16 rounded-full bg-pink/5 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-pink text-2xl">📊</span>
+                    </div>
+                    <h3 class="font-display text-xs font-800 uppercase tracking-tighter mb-3">Digital & Analytics</h3>
+                    <p class="text-white/20 font-light text-[10px] leading-relaxed">Ads specialists, SEO experts, and data analysts optimizing every dirham for maximum measurable ROI.</p>
+                </div>
+            </div>
+
+            <!-- TEAM STATS -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
+                <div class="fade-in interactive text-center">
+                    <p class="font-display font-800 text-3xl text-electric mb-2">15+</p>
+                    <p class="text-white/20 text-[9px] tracking-[0.3em] font-black uppercase">Team Members</p>
+                </div>
+                <div class="fade-in interactive text-center">
+                    <p class="font-display font-800 text-3xl text-violet mb-2">50+</p>
+                    <p class="text-white/20 text-[9px] tracking-[0.3em] font-black uppercase">Projects Delivered</p>
+                </div>
+                <div class="fade-in interactive text-center">
+                    <p class="font-display font-800 text-3xl text-gold mb-2">8+</p>
+                    <p class="text-white/20 text-[9px] tracking-[0.3em] font-black uppercase">Industries Served</p>
+                </div>
+                <div class="fade-in interactive text-center">
+                    <p class="font-display font-800 text-3xl text-pink mb-2">100%</p>
+                    <p class="text-white/20 text-[9px] tracking-[0.3em] font-black uppercase">UAE Focused</p>
+                </div>
+            </div>
+
+            <!-- TEAM CTA -->
+            <div class="fade-in mt-16 text-center">
+                <div class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-electric/5 border border-electric/10">
+                    <span class="text-electric text-sm">🤝</span>
+                    <span class="text-electric/60 text-[9px] tracking-[0.3em] font-black uppercase">One integrated team. Zero fragmentation. Total accountability.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ CTA / CONTACT ═══════════════════════════════════════════ -->
+    <section class="content-layer py-40 px-6">
+        <div class="max-w-5xl mx-auto glass-panel p-24 md:p-36 rounded-[5rem] text-center fade-in interactive relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-electric to-transparent"></div>
+            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-violet to-transparent"></div>
+
+            <p class="sub-header mb-6 text-electric">Ready to Accelerate?</p>
+            <h2 class="font-display font-800 text-4xl md:text-7xl mb-6 tracking-[-0.05em] uppercase leading-tight">
+                Secure Your <span class="text-gradient">Growth</span>
+            </h2>
+            <p class="text-white/20 text-sm font-light max-w-xl mx-auto mb-16 leading-relaxed">
+                Transform your marketing from a cost into a measurable, revenue platform. Book a free strategy call today.
+            </p>
+
+            <div class="space-y-8">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="tel:+971523595930" class="group relative px-16 py-6 rounded-full border border-electric/20 transition-all overflow-hidden inline-block">
+                        <span class="absolute inset-0 bg-electric translate-y-full group-hover:translate-y-0 transition-transform duration-500"></span>
+                        <span class="relative text-[9px] tracking-[0.6em] font-black uppercase text-electric group-hover:text-black transition-colors">+971 52 359 5930</span>
+                    </a>
+                    <a href="mailto:connect@withaq.info" class="group relative px-16 py-6 rounded-full border border-white/5 transition-all overflow-hidden inline-block">
+                        <span class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></span>
+                        <span class="relative text-[9px] tracking-[0.6em] font-black uppercase group-hover:text-black transition-colors">connect@withaq.info</span>
+                    </a>
+                </div>
+                <a href="https://www.withaq.info" class="inline-block text-white/15 text-xs hover:text-electric transition-colors font-light">www.withaq.info</a>
+            </div>
+
+            <!-- LOCATION -->
+            <div class="mt-16 pt-12 border-t border-white/3">
+                <p class="text-white/10 text-[9px] tracking-[0.4em] font-black uppercase">📍 Ginger Business Center, AlKhabaisi, Deira, Dubai</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ FOOTER ═══════════════════════════════════════════ -->
+    <footer class="content-layer py-16 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+                <div class="font-display text-xl tracking-[-0.1em] font-800 uppercase">With<span class="text-gradient">AQ</span></div>
+                <div class="flex items-center gap-8">
+                    <a href="#about" class="interactive text-[8px] tracking-[0.4em] font-black uppercase text-white/15 hover:text-electric transition-colors">About</a>
+                    <a href="#intel" class="interactive text-[8px] tracking-[0.4em] font-black uppercase text-white/15 hover:text-electric transition-colors">Strategy</a>
+                    <a href="#plans" class="interactive text-[8px] tracking-[0.4em] font-black uppercase text-white/15 hover:text-electric transition-colors">Plans</a>
+                    <a href="mailto:connect@withaq.info" class="interactive text-[8px] tracking-[0.4em] font-black uppercase text-white/15 hover:text-electric transition-colors">Contact</a>
+                </div>
+            </div>
+            <div class="border-t border-white/3 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[7px] tracking-[0.6em] font-black uppercase text-white/8">© 2024 WithAQ Revenue Platform • Dubai, UAE</p>
+                <p class="text-[7px] tracking-[0.6em] font-black uppercase text-white/8">Built for Speed • Proven in the Emirates</p>
+            </div>
+        </div>
     </footer>
 
+    <!-- ═══════════════════════════════════════════ SCRIPTS ═══════════════════════════════════════════ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
+        // ─── THREE.JS PARTICLE SYSTEM ───
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true, antialias: true });
@@ -194,11 +1210,11 @@
         const particleCount = 4500;
         const geo = new THREE.BufferGeometry();
         const pos = new Float32Array(particleCount * 3);
-        
-        for(let i=0; i < particleCount * 3; i+=3) {
-            pos[i] = (Math.random() - 0.5) * 12;     
-            pos[i+1] = (Math.random() - 0.5) * 12; 
-            pos[i+2] = (Math.random() - 0.5) * 6;   
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            pos[i] = (Math.random() - 0.5) * 12;
+            pos[i + 1] = (Math.random() - 0.5) * 12;
+            pos[i + 2] = (Math.random() - 0.5) * 6;
         }
 
         geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
@@ -212,7 +1228,7 @@
             mouseX = (e.clientX / window.innerWidth - 0.5) * 18;
             mouseY = (e.clientY / window.innerHeight - 0.5) * -18;
         });
-        document.addEventListener('mousedown', () => { clickPulse = 1.4; });
+                document.addEventListener('mousedown', () => { clickPulse = 1.4; });
 
         function animate() {
             requestAnimationFrame(animate);
@@ -220,30 +1236,38 @@
             const positions = points.geometry.attributes.position.array;
             if (clickPulse > 0) clickPulse *= 0.95;
 
-            mat.color.setHex(scroll > 0.4 ? 0xFFD700 : 0xFFF0F5);
+            // Color shift based on scroll position
+            if (scroll > 0.7) {
+                mat.color.setHex(0x12F0DE); // electric at bottom
+            } else if (scroll > 0.4) {
+                mat.color.setHex(0xFFD700); // gold in middle
+            } else {
+                mat.color.setHex(0xFFF0F5); // pink-white at top
+            }
 
-            for(let i=0; i < positions.length; i+=3) {
+            for (let i = 0; i < positions.length; i += 3) {
                 const dx = mouseX - positions[i];
-                const dy = mouseY - positions[i+1];
-                const dist = Math.sqrt(dx*dx + dy*dy);
+                const dy = mouseY - positions[i + 1];
+                const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < 4) {
                     positions[i] += dx * 0.04;
-                    positions[i+1] += dy * 0.04;
+                    positions[i + 1] += dy * 0.04;
                 }
                 if (clickPulse > 0.01) {
                     positions[i] += (positions[i] * 0.04) * clickPulse;
-                    positions[i+1] += (positions[i+1] * 0.04) * clickPulse;
+                    positions[i + 1] += (positions[i + 1] * 0.04) * clickPulse;
                 }
                 positions[i] += Math.sin(Date.now() * 0.0008 + i) * 0.002;
-                positions[i+1] += Math.cos(Date.now() * 0.0008 + i) * 0.002;
+                positions[i + 1] += Math.cos(Date.now() * 0.0008 + i) * 0.002;
             }
-            
+
             points.geometry.attributes.position.needsUpdate = true;
             points.rotation.y += 0.0003 + (scroll * 0.006);
             renderer.render(scene, camera);
         }
         animate();
 
+        // ─── CUSTOM CURSOR ───
         const dot = document.getElementById('cursorDot');
         const ring = document.getElementById('cursorRing');
         document.addEventListener('mousemove', e => {
@@ -251,12 +1275,152 @@
             dot.style.top = ring.style.top = e.clientY + 'px';
         });
 
-        const obs = new IntersectionObserver(ents => ents.forEach(en => en.isIntersecting && en.target.classList.add('visible')), {threshold: 0.1});
+        // Cursor hover effect on interactive elements
+        document.querySelectorAll('.interactive').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                ring.style.transform = 'translate(-50%, -50%) scale(1.8)';
+                ring.style.borderColor = 'rgba(18, 240, 222, 0.5)';
+            });
+            el.addEventListener('mouseleave', () => {
+                ring.style.transform = 'translate(-50%, -50%) scale(1)';
+                ring.style.borderColor = 'rgba(18, 240, 222, 0.2)';
+            });
+        });
+
+        // ─── SCROLL FADE-IN OBSERVER ───
+        const obs = new IntersectionObserver(ents => ents.forEach(en => {
+            if (en.isIntersecting) {
+                en.target.classList.add('visible');
+
+                // Animate ROI bars when visible
+                const bars = en.target.querySelectorAll('.roi-bar-fill');
+                bars.forEach(bar => bar.classList.add('animated'));
+            }
+        }), { threshold: 0.1 });
         document.querySelectorAll('.fade-in').forEach(f => obs.observe(f));
+
+        // ─── ACCORDION TOGGLE ───
+        function toggleAccordion(header) {
+            const body = header.nextElementSibling;
+            const isOpen = body.classList.contains('open');
+
+            // Close all accordions first
+            document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('open'));
+            document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
+
+            // Open clicked one if it was closed
+            if (!isOpen) {
+                body.classList.add('open');
+                header.classList.add('active');
+            }
+        }
+
+        // ─── RESPONSIVE RESIZE ───
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        // ─── SMOOTH SCROLL FOR NAV LINKS ───
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ─── NAVBAR SCROLL EFFECT ───
+        const nav = document.querySelector('nav');
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            if (currentScroll > 100) {
+                nav.style.background = 'rgba(2, 2, 2, 0.8)';
+                nav.style.backdropFilter = 'blur(20px)';
+            } else {
+                nav.style.background = 'transparent';
+                nav.style.backdropFilter = 'none';
+            }
+
+            // Hide/show nav on scroll direction
+            if (currentScroll > lastScroll && currentScroll > 300) {
+                nav.style.transform = 'translateY(-100%)';
+                nav.style.transition = 'transform 0.4s ease, background 0.4s ease';
+            } else {
+                nav.style.transform = 'translateY(0)';
+                nav.style.transition = 'transform 0.4s ease, background 0.4s ease';
+            }
+            lastScroll = currentScroll;
+        });
+
+        // ─── STAGGERED FADE-IN FOR GRID ITEMS ───
+        const staggerObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    const children = entry.target.querySelectorAll('.fade-in');
+                    children.forEach((child, i) => {
+                        setTimeout(() => {
+                            child.classList.add('visible');
+                        }, i * 150);
+                    });
+                }
+            });
+        }, { threshold: 0.05 });
+
+        document.querySelectorAll('.grid').forEach(grid => staggerObserver.observe(grid));
+
+        // ─── COUNTER ANIMATION FOR PRICE TAGS ───
+        function animateCounter(element, target, duration = 1500) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    start = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(start).toLocaleString();
+            }, 16);
+        }
+
+        const priceObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const priceElements = entry.target.querySelectorAll('.price-tag');
+                    priceElements.forEach(el => {
+                        const text = el.textContent;
+                        const match = text.match(/[\d,]+/);
+                        if (match && !el.dataset.animated) {
+                            const target = parseInt(match[0].replace(/,/g, ''));
+                            const suffix = text.replace(match[0], '{{NUM}}');
+                            el.dataset.animated = 'true';
+
+                            let start = 0;
+                            const duration = 1500;
+                            const increment = target / (duration / 16);
+                            const timer = setInterval(() => {
+                                start += increment;
+                                if (start >= target) {
+                                    start = target;
+                                    clearInterval(timer);
+                                }
+                                el.innerHTML = suffix.replace('{{NUM}}', Math.floor(start).toLocaleString());
+                            }, 16);
+                        }
+                    });
+                    priceObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.pricing-grid').forEach(grid => priceObserver.observe(grid));
     </script>
 </body>
 </html>
